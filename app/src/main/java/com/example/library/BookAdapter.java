@@ -20,10 +20,19 @@ import java.util.ArrayList;
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
     private Context context;
     private ArrayList<Book> bookArrayList;
+    private OnItemClickListener listener;
 
     public BookAdapter(Context parameterContext, ArrayList<Book> booksList){
         context = parameterContext;
         bookArrayList = booksList;
+    }
+
+    public interface OnItemClickListener{
+        void onItemClick(int position);
+    }
+
+    public void setOnClickListener(OnItemClickListener parameterListener){
+        listener = parameterListener;
     }
 
     @NonNull
@@ -48,19 +57,6 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         buildString(author, authors);
         buildString(categories, builderCategories);
 
-//        for (int i = 0; i < categories.length(); i++){
-//            try {
-//                builderCategories.append(categories.get(i));
-//                if (i + 1 != categories.length()){
-//                    builderCategories.append(", ");
-//                }else{
-//                    builderCategories.append(".");
-//                }
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//        }
-
         Picasso.get().load(imageUrl).fit().centerInside().into(holder.imageView);
         holder.textViewAuthor.setText("Author(s): " + authors);
         holder.textViewShortDescription.setText("Description: " + shortDescription);
@@ -69,7 +65,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
 
     }
 
-    private void buildString(JSONArray jsonArray, StringBuilder stringBuilder) {
+    public void buildString(JSONArray jsonArray, StringBuilder stringBuilder) {
         for (int i = 0; i < jsonArray.length(); i++){
             try {
                 stringBuilder.append(jsonArray.get(i));
@@ -103,6 +99,18 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
             textViewShortDescription = itemView.findViewById(R.id.text_view_short_description);
             textViewCategories = itemView.findViewById(R.id.text_view_categories);
             textViewTitle = itemView.findViewById(R.id.text_view_title);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null){
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION){
+                            listener.onItemClick(position);
+                        }
+                    }
+                }
+            });
 
         }
     }
