@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.android.volley.Request;
@@ -16,15 +17,23 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class ListOfBooks extends AppCompatActivity {
+public class ListOfBooks extends AppCompatActivity implements BookAdapter.OnItemClickListener {
+    public static final String EXTRA_IMAGE = "imageUrl";
+    public static final String EXTRA_TITLE = "title";
+    public static final String EXTRA_AUTHOR = "autor";
+    public static final String EXTRA_ISBN = "isbn";
+    public static final String EXTRA_STATUS = "status";
+    public static final String EXTRA_PAGES = "pages";
+    public static final String EXTRA_DATE = "date";
+    public static final String EXTRA_DESCRIPTION = "longDescription";
+
     private RecyclerView recyclerView;
     private BookAdapter bookAdapter;
     private ArrayList<Book> bookArrayList;
     private RequestQueue requestQueue;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +64,17 @@ public class ListOfBooks extends AppCompatActivity {
                         String shortDescription = book.getString("shortDescription");
                         JSONArray categories = book.getJSONArray("categories");
                         String title = book.getString("title");
+                        String isbn = book.getString("isbn");
+                        String status = book.getString("status");
+                        int pages = book.getInt("pageCount");
+                        String longDescription = book.getString("longDescription");
 
-                        bookArrayList.add(new Book(imageUrl, author, shortDescription, categories, title));
+                        JSONObject jsonDateGeneral = book.getJSONObject("publishedDate");
+                        String dateString = jsonDateGeneral.getString("$date");
+
+
+                        bookArrayList.add(new Book(imageUrl, author, shortDescription, categories, title,
+                                isbn, status, pages, dateString, longDescription));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -64,6 +82,7 @@ public class ListOfBooks extends AppCompatActivity {
 
                 bookAdapter = new BookAdapter(ListOfBooks.this, bookArrayList);
                 recyclerView.setAdapter(bookAdapter);
+                bookAdapter.setOnClickListener(ListOfBooks.this);
 
             }
         }, new Response.ErrorListener() {
@@ -75,5 +94,26 @@ public class ListOfBooks extends AppCompatActivity {
         });
 
         requestQueue.add(request);
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        Intent detailIntent = new Intent(this, BookDetail.class);
+        Book clickedBook = bookArrayList.get(position);
+        StringBuilder authors = new StringBuilder();
+
+
+        bookAdapter.buildString(clickedBook.getAuthor(), authors);
+        detailIntent.putExtra(EXTRA_IMAGE, clickedBook.getImageUrl());
+        detailIntent.putExtra(EXTRA_TITLE, clickedBook.getTitle());
+        detailIntent.putExtra(EXTRA_AUTHOR, (CharSequence) authors);
+        detailIntent.putExtra(EXTRA_ISBN, clickedBook.getIsbn());
+        detailIntent.putExtra(EXTRA_STATUS, clickedBook.getStatus());
+        detailIntent.putExtra(EXTRA_PAGES, clickedBook.getPages());
+        detailIntent.putExtra(EXTRA_DATE, clickedBook.getDate());
+        detailIntent.putExtra(EXTRA_DESCRIPTION, clickedBook.getLongDescription());
+
+
+        startActivity(detailIntent);
     }
 }
