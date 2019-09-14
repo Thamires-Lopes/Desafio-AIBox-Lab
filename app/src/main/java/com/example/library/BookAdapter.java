@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,15 +19,23 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
-public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
+public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> implements Filterable {
     private Context context;
     private ArrayList<Book> bookArrayList;
     private OnItemClickListener listener;
+    private ArrayList<Book> bookArrayListFull;
 
     public BookAdapter(Context parameterContext, ArrayList<Book> booksList){
         context = parameterContext;
         bookArrayList = booksList;
+        bookArrayListFull = new ArrayList<>(booksList);
     }
+
+    @Override
+    public Filter getFilter() {
+        return authorFilter;
+    }
+
 
     public interface OnItemClickListener{
         void onItemClick(int position);
@@ -114,4 +124,53 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
 
         }
     }
+
+    private Filter authorFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            ArrayList<Book> filteredAuthorList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0){
+                filteredAuthorList.addAll(bookArrayListFull);
+            }else{
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (Book book: bookArrayListFull){
+
+                    JSONArray authorArray = book.getAuthor();
+                    for (int j = 0; j < authorArray.length(); j ++){
+                        try {
+                            String name = new String();
+                            name = authorArray.get(j).toString();
+
+                            String authorString[] = name.split(" ");
+                            for (String author: authorString){
+                                if(author.toLowerCase().startsWith(filterPattern)){
+                                    filteredAuthorList.add(book);
+                                    break;
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredAuthorList;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            bookArrayList.clear();
+            bookArrayList.addAll((ArrayList) results.values);
+            notifyDataSetChanged();
+
+        }
+    };
+
 }
