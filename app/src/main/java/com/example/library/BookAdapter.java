@@ -138,25 +138,35 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
                 for (Book book: bookArrayListFull){
 
                     JSONArray authorArray = book.getAuthor();
+                    JSONArray categoriesArray = book.getCategories();
                     for (int j = 0; j < authorArray.length(); j ++){
                         try {
-                            String name = new String();
+                            String name;
                             name = authorArray.get(j).toString();
 
                             String authorString[] = name.split(" ");
+                            String categories;
+                            categories = categoriesArray.get(j).toString();
+                            String categoriesString[] = categories.split(" ");
                             for (String author: authorString){
                                 if(author.toLowerCase().startsWith(filterPattern)){
                                     filteredAuthorList.add(book);
                                     break;
+                                }else{
+                                    for (String categorie: categoriesString){
+                                        if(categorie.toLowerCase().startsWith(filterPattern)){
+                                            filteredAuthorList.add(book);
+                                            break;
+                                        }
+                                    }break;
+
                                 }
                             }
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
-
-
                 }
             }
             FilterResults results = new FilterResults();
