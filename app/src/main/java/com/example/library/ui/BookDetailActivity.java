@@ -1,4 +1,4 @@
-package com.example.library;
+package com.example.library.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,18 +7,19 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.library.R;
 import com.squareup.picasso.Picasso;
 
-import static com.example.library.ListOfBooks.EXTRA_AUTHOR;
-import static com.example.library.ListOfBooks.EXTRA_DATE;
-import static com.example.library.ListOfBooks.EXTRA_DESCRIPTION;
-import static com.example.library.ListOfBooks.EXTRA_IMAGE;
-import static com.example.library.ListOfBooks.EXTRA_ISBN;
-import static com.example.library.ListOfBooks.EXTRA_PAGES;
-import static com.example.library.ListOfBooks.EXTRA_STATUS;
-import static com.example.library.ListOfBooks.EXTRA_TITLE;
+import static com.example.library.ui.ListOfBooksActivity.EXTRA_AUTHOR;
+import static com.example.library.ui.ListOfBooksActivity.EXTRA_DATE;
+import static com.example.library.ui.ListOfBooksActivity.EXTRA_DESCRIPTION;
+import static com.example.library.ui.ListOfBooksActivity.EXTRA_IMAGE;
+import static com.example.library.ui.ListOfBooksActivity.EXTRA_ISBN;
+import static com.example.library.ui.ListOfBooksActivity.EXTRA_PAGES;
+import static com.example.library.ui.ListOfBooksActivity.EXTRA_STATUS;
+import static com.example.library.ui.ListOfBooksActivity.EXTRA_TITLE;
 
-public class BookDetail extends AppCompatActivity {
+public class BookDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

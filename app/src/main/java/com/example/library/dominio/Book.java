@@ -1,4 +1,4 @@
-package com.example.library;
+package com.example.library.dominio;
 
 import org.json.JSONArray;
 
