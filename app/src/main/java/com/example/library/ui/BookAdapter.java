@@ -1,4 +1,4 @@
-package com.example.library;
+package com.example.library.ui;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,6 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.library.R;
+import com.example.library.dominio.Book;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;

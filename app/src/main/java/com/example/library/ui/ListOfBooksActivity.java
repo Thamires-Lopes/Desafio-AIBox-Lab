@@ -1,4 +1,4 @@
-package com.example.library;
+package com.example.library.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -18,13 +18,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.library.dominio.Book;
+import com.example.library.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
 
-public class ListOfBooks extends AppCompatActivity implements BookAdapter.OnItemClickListener {
+public class ListOfBooksActivity extends AppCompatActivity implements BookAdapter.OnItemClickListener {
     public static final String EXTRA_IMAGE = "imageUrl";
     public static final String EXTRA_TITLE = "title";
     public static final String EXTRA_AUTHOR = "autor";
@@ -85,9 +87,9 @@ public class ListOfBooks extends AppCompatActivity implements BookAdapter.OnItem
                     }
                 }
 
-                bookAdapter = new BookAdapter(ListOfBooks.this, bookArrayList);
+                bookAdapter = new BookAdapter(ListOfBooksActivity.this, bookArrayList);
                 recyclerView.setAdapter(bookAdapter);
-                bookAdapter.setOnClickListener(ListOfBooks.this);
+                bookAdapter.setOnClickListener(ListOfBooksActivity.this);
 
             }
         }, new Response.ErrorListener() {
@@ -103,7 +105,7 @@ public class ListOfBooks extends AppCompatActivity implements BookAdapter.OnItem
 
     @Override
     public void onItemClick(int position) {
-        Intent detailIntent = new Intent(this, BookDetail.class);
+        Intent detailIntent = new Intent(this, BookDetailActivity.class);
         Book clickedBook = bookArrayList.get(position);
         StringBuilder authors = new StringBuilder();
 
